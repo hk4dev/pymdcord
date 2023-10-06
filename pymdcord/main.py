@@ -139,5 +139,9 @@ CONTINUED YAY
 
 paragraph ||**effect** is|| __*here*__!
 `hello ~~world~~ lol..`
+
+```py
+asdf
+```
 """.strip("\n")
     pprint(parse(test_string), compact=False, indent=2)
