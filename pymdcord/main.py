@@ -1,29 +1,4 @@
 import re
-from pprint import pprint
-# import sys
-
-# sys.setrecursionlimit(50)
-
-test_string = """
-# HEADER
- # HEADER
-###### HEADER
- ###### HEADER
-#WRONG HEADER
- ##WRONG HEADER
-
-* LIST
-  * LIST
-*WRONGLIST
-
->BLOCKQUOTE
-> BLOCKQUOTE
-CONTINUED YAY
->> NEXT LEVEL
-
-paragraph **effect** is __*here*__!
-`hello ~~world~~ lol..`
-""".strip("\n")
 
 t_HEADER = r"^\s*#{1,6}\s(?P<content>\s*[^\s]+.*\n?)$"
 t_LIST = r"^\s*([*\-+]\s|\d+\.\s)(?P<content>\s*[^\s]+.*\n?)$"
@@ -139,5 +114,29 @@ def parse(t: str):
             res.append(_res)
     return res
 
+if __name__ == "__main__":
+    import sys
+    from pprint import pprint
+    sys.setrecursionlimit(50)
 
-pprint(parse(test_string), compact=False, indent=2)
+    test_string = """
+    # HEADER
+    # HEADER
+    ###### HEADER
+    ###### HEADER
+    #WRONG HEADER
+    ##WRONG HEADER
+
+    * LIST
+    * LIST
+    *WRONGLIST
+
+    >BLOCKQUOTE
+    > BLOCKQUOTE
+    CONTINUED YAY
+    >> NEXT LEVEL
+
+    paragraph **effect** is __*here*__!
+    `hello ~~world~~ lol..`
+    """.strip("\n")
+    pprint(parse(test_string), compact=False, indent=2)
