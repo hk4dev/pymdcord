@@ -7,12 +7,20 @@ t_BLOCKQUOTE = r"^\s*(?P<lv>>+)(?P<content>\s*[^\s]+.*\n?)$"
 t_CODEBLOCK_START = r"^`{3}(?P<lang>[^`\n]*)\n$"
 t_CODEBLOCK_END = r"^\s*`{3}\n?$"
 
+i_LINK = r"https?:\/\/[^\s\n]*"
+i_MASKLINK = r"\[(?P<content>.*)\]\((?P<href>https?:\/\/[^s\n]*)\)"
+i_MASKIMAGE = r"\[(?P<content>.*)\]\(!(?P<href>https?:\/\/[^s\n]*)\)"
+
 HEADER = re.compile(t_HEADER)
 LIST = re.compile(t_LIST)
 BLOCKQUOTE = re.compile(t_BLOCKQUOTE)
 
 CODEBLOCK_START = re.compile(t_CODEBLOCK_START)
 CODEBLOCK_END = re.compile(t_CODEBLOCK_END)
+
+ILINK = re.compile(i_LINK)
+IMASKLINK = re.compile(i_MASKLINK)
+IMASKIMAGE = re.compile(i_MASKIMAGE)
 
 INLINE_TRIGGERS = {
     "bold": ["**"],
@@ -22,6 +30,12 @@ INLINE_TRIGGERS = {
     "code": ["`"],
     "codeblock": ["```"],
     "secret": ["||"],
+}
+
+INLINE_REGEXS = {
+    "link": ILINK,
+    "masklink": IMASKLINK,
+    "maskimage": IMASKIMAGE,
 }
 
 def parse(t: str):
