@@ -4,7 +4,7 @@ t_HEADER = r"^\s*#{1,6}\s(?P<content>\s*[^\s]+.*\n?)$"
 t_LIST = r"^\s*([*\-+]\s|\d+\.\s)(?P<content>\s*[^\s]+.*\n?)$"
 t_BLOCKQUOTE = r"^\s*(?P<lv>>+)(?P<content>\s*[^\s]+.*\n?)$"
 
-t_CODEBLOCK_START = r"^`{3}[^`\n]*\n$"
+t_CODEBLOCK_START = r"^`{3}(?P<lang>[^`\n]*)\n$"
 t_CODEBLOCK_END = r"^\s*`{3}\n?$"
 
 HEADER = re.compile(t_HEADER)
@@ -69,7 +69,18 @@ def parse(t: str):
     while ind < len(p):
         line = p[ind]
         ind += 1
-        if header_match := HEADER.fullmatch(line):
+        if codeblock_match := CODEBLOCK_START.fullmatch(line):
+            print("CODEBLOCKSTART " + codeblock_match.group("lang"))
+            mem = ""
+            while ind < len(p):
+                line = p[ind]
+                if CODEBLOCK_END.fullmatch(line):
+                    ind += 1
+                    break
+                mem += line
+                ind += 1
+            res.append({"type": "codeblock", "lang": codeblock_match.group("lang"), "content": mem})
+        elif header_match := HEADER.fullmatch(line):
             print("HEADER " + line[:-1])
             res.append({"type": "header", "content": header_match.group("content")})
         elif list_match := LIST.fullmatch(line):
@@ -142,6 +153,7 @@ paragraph ||**effect** is|| __*here*__!
 
 ```py
 asdf
+asdfasdf
 ```
 """.strip("\n")
     pprint(parse(test_string), compact=False, indent=2)
