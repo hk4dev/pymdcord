@@ -20,6 +20,7 @@ INLINE_TRIGGERS = {
     "italic": ['*', '_'],
     "strikethrough": ["~~"],
     "code": ["`"],
+    "codeblock": ["```"],
     "secret": ["||"],
 }
 
