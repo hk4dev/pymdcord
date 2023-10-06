@@ -121,23 +121,23 @@ if __name__ == "__main__":
     sys.setrecursionlimit(50)
 
     test_string = """
-    # HEADER
-    # HEADER
-    ###### HEADER
-    ###### HEADER
-    #WRONG HEADER
-    ##WRONG HEADER
+# HEADER
+# HEADER
+###### HEADER
+###### HEADER
+#WRONG HEADER
+##WRONG HEADER
 
-    * LIST
-    * LIST
-    *WRONGLIST
+* LIST
+* LIST
+*WRONGLIST
 
-    >BLOCKQUOTE
-    > BLOCKQUOTE
-    CONTINUED YAY
-    >> NEXT LEVEL
+>BLOCKQUOTE
+> BLOCKQUOTE
+CONTINUED YAY
+>> NEXT LEVEL
 
-    paragraph **effect** is __*here*__!
-    `hello ~~world~~ lol..`
-    """.strip("\n")
+paragraph ||**effect** is|| __*here*__!
+`hello ~~world~~ lol..`
+""".strip("\n")
     pprint(parse(test_string), compact=False, indent=2)
