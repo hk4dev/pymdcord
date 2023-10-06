@@ -20,6 +20,7 @@ INLINE_TRIGGERS = {
     "italic": ['*', '_'],
     "strikethrough": ["~~"],
     "code": ["`"],
+    "secret": ["||"],
 }
 
 def parse(t: str):
