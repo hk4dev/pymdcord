@@ -32,7 +32,8 @@ def parse(t: str):
         _line: str,
         start_pos: int = 0, 
         triggered_by: str = None,
-        type_as: str = "inline"):
+        type_as: str = "inline",
+        root: bool = True):
         
         _res = {"type": type_as, "content": []}
         _ind = start_pos
@@ -48,8 +49,14 @@ def parse(t: str):
                     # print('opened by', triggered, _ind)  # debug
                     # print((' ' if _ind - 1 < 0 else '') + line)  # debug
                     # print(' '*(_ind - 1 if _ind - 1 >= 0 else _ind) + '^^')  # debug
-                    _ind, _content_res = paragraph_effect_parser(_line, _ind + len(triggered), triggered, trigger_type)
-                    _res["content"].append(_content_res)
+                    _ind, _content_res = paragraph_effect_parser(_line, _ind + len(triggered), triggered, trigger_type, False)
+                    if _content_res["type"] == "noclose":
+                        if len(_res["content"]) > 0 and type(_res["content"][-1]) == str:
+                            _res["content"][-1] += triggered
+                        else:
+                            _res["content"].append(triggered)
+                    else:
+                        _res["content"].append(_content_res)
                     # print('by closing this, we\'re here now! (', _ind, ')')  # debug
                     # print((' ' if _ind - 1 < 0 else '') + line)  # debug
                     # print(' '*(_ind - 1 if _ind - 1 >= 0 else _ind) + '^^')  # debug
@@ -64,7 +71,7 @@ def parse(t: str):
                 _res["content"].append(_line[_ind])
                 
             _ind += 1
-        return _ind, _res
+        return start_pos, _res if root else {"type": "noclose", "content": []}
 
     while ind < len(p):
         line = p[ind]
@@ -147,8 +154,8 @@ if __name__ == "__main__":
 CONTINUED YAY
 >> NEXT LEVEL
 
-paragraph ||**effect** is|| __*here*__!
-`hello ~~world~~ lol..`
+paragraph ||**effect** is|| __*here__!
+`hello ~~world~~ lol..
 
 ```py
 asdf
