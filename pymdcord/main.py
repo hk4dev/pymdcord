@@ -70,7 +70,7 @@ def parse(t: str):
         line = p[ind]
         ind += 1
         if codeblock_match := CODEBLOCK_START.fullmatch(line):
-            print("CODEBLOCKSTART " + codeblock_match.group("lang"))
+            # print("CODEBLOCKSTART " + codeblock_match.group("lang"))
             mem = ""
             while ind < len(p):
                 line = p[ind]
@@ -81,19 +81,19 @@ def parse(t: str):
                 ind += 1
             res.append({"type": "codeblock", "lang": codeblock_match.group("lang"), "content": mem})
         elif header_match := HEADER.fullmatch(line):
-            print("HEADER " + line[:-1])
+            # print("HEADER " + line[:-1])
             res.append({"type": "header", "content": header_match.group("content")})
         elif list_match := LIST.fullmatch(line):
-            print("LISTSTART " + line[:-1])
+            # print("LISTSTART " + line[:-1])
             mem = [list_match.group("content")]
             while ind < len(p):
                 line = p[ind]
                 if (flm := LIST.fullmatch(line)) or (line != "\n" and line.strip()[0] not in ['*', '-', '+']):
-                    print("LISTITEM " + line[:-1])
+                    # print("LISTITEM " + line[:-1])
                     if flm:
                         mem.append(flm.group("content"))
                     else:
-                        print("CONTINUED")
+                        # print("CONTINUED")
                         mem[-1] += line
                 elif line == "\n":
                     ind += 1
@@ -101,27 +101,26 @@ def parse(t: str):
                 ind += 1
             res.append({"type": "list", "content": mem})
         elif rlm := BLOCKQUOTE.fullmatch(line):
-            print("BQUOTESTART " + line[:-1])
+            # print("BQUOTESTART " + line[:-1])
             mem = [{"lv": len(rlm.group("lv")), "content": rlm.group("content")}]
             while ind < len(p):
                 line = p[ind]
                 if (flm := BLOCKQUOTE.fullmatch(line)) or (line != "\n" and line.strip()[0] != '>'):
-                    print("BQUOTEITEM " + line[:-1], end="")
+                    # print("BQUOTEITEM " + line[:-1], end="")
                     if flm:
                         lv = len(flm.group("lv"))
-                        print(" LV " + str(lv))
+                        # print(" LV " + str(lv))
                         mem.append({"lv": lv, "content": flm.group("content")})
                     else:
-                        print(" CONTINUED")
+                        # print(" CONTINUED")
                         mem[-1]["content"] += line
                 elif line == "\n":
                     ind += 1
                     break
                 ind += 1
             res.append({"type": "blockquote", "content": mem})
-        # TODO: add codeblock support
         else:
-            print("IN PARAGRPAPH " + line[:-1])
+            # print("IN PARAGRPAPH " + line[:-1])
             _, _res = paragraph_effect_parser(line)
             res.append(_res)
     return res
