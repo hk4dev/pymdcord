@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pymdcord"
-version = "0.5.0"
+version = "0.5.1"
 description = "A markdown parser for discord markdown syntax"
 authors = ["Shinwoo PARK <shinwoo.park@psw.kr>"]
 readme = "README.md"
