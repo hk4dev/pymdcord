@@ -208,9 +208,7 @@ def parse(t: str, debug: bool = False) -> list[ALLTYPE]:
             ]
             while ind < len(p):
                 line = p[ind]
-                if (flm := BLOCKQUOTE.fullmatch(line)) or (
-                    line != "\n" and line.strip()[0] != ">"
-                ):
+                if (flm := BLOCKQUOTE.fullmatch(line)) or (line != "\n"):
                     if flm:
                         lv = len(flm.group("lv"))
                         logger.debug("BQUOTE LV " + str(lv) + " " + line[:-1])
