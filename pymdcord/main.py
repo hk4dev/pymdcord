@@ -18,7 +18,7 @@ from logging import getLogger, DEBUG, WARNING, StreamHandler
 
 logger = getLogger("pymdcord")
 logger.addHandler(StreamHandler())
-logger.setLevel(DEBUG)
+logger.setLevel(WARNING)
 
 t_HEADER = r"^\s*(?P<lv>#{1,3})\s(?P<content>\s*[^\s]+.*\n?)$"
 t_LIST = r"^(?P<lv>\s*)([*\-+]\s|\d+\.\s)(?P<content>\s*[^\s]+.*\n?)$"
@@ -254,6 +254,8 @@ if __name__ == "__main__":
     from pprint import pprint
 
     sys.setrecursionlimit(50)
+
+    logger.setLevel(DEBUG)
 
     test_string = """
 # HEADER
