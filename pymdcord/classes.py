@@ -91,7 +91,7 @@ class c_LINKS(c):
 @dataclass
 class c_INLINECONTENT(c):
     selftype: INLINETYPE
-    content: list["c_INLINECONTENT" | c_LINKS | str] = field(default_factory=list)
+    content: list[type["c_INLINECONTENT"] | c_LINKS | str] = field(default_factory=list)
 
 
 @dataclass
