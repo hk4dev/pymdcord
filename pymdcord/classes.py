@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Literal, Self
+from typing import Literal
 
 INLINETYPE = Literal[
     "inline",
@@ -91,7 +91,7 @@ class c_LINKS(c):
 @dataclass
 class c_INLINECONTENT(c):
     selftype: INLINETYPE
-    content: list[Self | c_LINKS | str] = field(default_factory=list)
+    content: list["c_INLINECONTENT" | c_LINKS | str] = field(default_factory=list)
 
 
 @dataclass
