@@ -1,7 +1,7 @@
 import re
 
-t_HEADER = r"^\s*#{1,6}\s(?P<content>\s*[^\s]+.*\n?)$"  # TODO: add header lv
-t_LIST = r"^\s*([*\-+]\s|\d+\.\s)(?P<content>\s*[^\s]+.*\n?)$"
+t_HEADER = r"^\s*(?P<lv>#{1,3})\s(?P<content>\s*[^\s]+.*\n?)$"
+t_LIST = r"^(?P<lv>\s*)([*\-+]\s|\d+\.\s)(?P<content>\s*[^\s]+.*\n?)$"
 t_BLOCKQUOTE = r"^\s*(?P<lv>>+)(?P<content>\s*[^\s]+.*\n?)$"
 
 t_CODEBLOCK_START = r"^`{3}(?P<lang>[^`\n]*)\n$"
@@ -112,19 +112,19 @@ def parse(t: str):
             res.append({"type": "codeblock", "lang": codeblock_match.group("lang"), "content": mem})
         elif header_match := HEADER.fullmatch(line):
             # print("HEADER " + line[:-1])
-            res.append({"type": "header", "content": header_match.group("content")})
+            res.append({"type": "header", "content": header_match.group("content"), "lv": len(header_match.group("lv"))})
         elif list_match := LIST.fullmatch(line):
             # print("LISTSTART " + line[:-1])
-            mem = [list_match.group("content")]
+            mem = [{"content": list_match.group("content"), "lv": len(list_match.group("lv"))}]
             while ind < len(p):
                 line = p[ind]
                 if (flm := LIST.fullmatch(line)) or (line != "\n" and line.strip()[0] not in ['*', '-', '+']):
                     # print("LISTITEM " + line[:-1])
                     if flm:
-                        mem.append(flm.group("content"))
+                        mem.append({"content": flm.group("content"), "lv": len(flm.group("lv"))})
                     else:
                         # print("CONTINUED")
-                        mem[-1] += line
+                        mem[-1]["content"] += line
                 elif line == "\n":
                     ind += 1
                     break
@@ -155,7 +155,6 @@ def parse(t: str):
             # print("IN PARAGRPAPH " + line[:-1])
             reserves = []
             for rematch in ILINK.finditer(line):
-                print(rematch.groupdict())
                 reserves.append(
                     (
                         rematch.start(), 
@@ -177,8 +176,8 @@ if __name__ == "__main__":
     test_string = """
 # HEADER
 # HEADER
-###### HEADER
-###### HEADER
+### HEADER
+### HEADER
 #WRONG HEADER
 ##WRONG HEADER
 
