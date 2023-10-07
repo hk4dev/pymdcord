@@ -53,7 +53,7 @@ class c_CODEBLOCK(c):
     content: str
 
     def md(self) -> str:
-        return f"```{self.lang}\n{self.content}\n```"
+        return f"```{self.lang}\n{self.content.strip('\n')}\n```"
 
 
 @dataclass
@@ -72,7 +72,7 @@ class c_LIST(c):
     content: list[c_LISTITEM] = field(default_factory=list)
     
     def md(self) -> str:
-        return '\n'.join(map(lambda x: x.md(), self.content))
+        return '\n'.join(map(lambda x: x.md(), self.content)) + "\n"
 
 
 @dataclass
@@ -90,7 +90,7 @@ class c_BLOCKQUOTE(c):
     content: list[c_BLOCKQUOTEITEM]
     
     def md(self) -> str:
-        return "\n\n".join(list(map(lambda x: x.md(), self.content)))
+        return "\n\n".join(list(map(lambda x: x.md(), self.content))) + "\n"
         
 
 

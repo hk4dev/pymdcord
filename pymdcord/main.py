@@ -180,9 +180,7 @@ def parse(t: str) -> list[ALLTYPE]:
             ]
             while ind < len(p):
                 line = p[ind]
-                if (flm := LIST.fullmatch(line)) or (
-                    line != "\n" and line.strip()[0] not in ["*", "-", "+"]
-                ):
+                if (flm := LIST.fullmatch(line)) or (line != "\n"):
                     if flm:
                         logger.debug(
                             "LISTITEM LV " + str(len(flm.group("lv"))) + " " + line[:-1]
@@ -295,3 +293,4 @@ or you want some [masked link](https://psw.kr)??
     pprint(object=parsed, compact=False, indent=2)
     print("---------------")
     print("".join(map(lambda x: x.md(), parsed)))
+    pprint(list(map(lambda x: x.md(), parsed)))
