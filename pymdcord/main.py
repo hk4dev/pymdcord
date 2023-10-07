@@ -1,5 +1,5 @@
 import re
-from classes import (
+from .classes import (
     ALLTYPE,
     INLINETYPE,
     c_HEADER,
