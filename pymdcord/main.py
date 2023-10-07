@@ -21,7 +21,7 @@ logger.addHandler(StreamHandler())
 logger.setLevel(WARNING)
 
 t_HEADER = r"^\s*(?P<lv>#{1,3})\s(?P<content>\s*[^\s]+.*\n?)$"
-t_LIST = r"^(?P<lv>\s*)([*\-+]\s|\d+\.\s)(?P<content>\s*[^\s]+.*\n?)$"
+t_LIST = r"^(?P<lv>\s*)(?P<sortof>[*\-+]\s|\d+\.\s)(?P<content>\s*[^\s]+.*\n?)$"
 t_BLOCKQUOTE = r"^\s*(?P<lv>>+)(?P<content>\s*[^\s]+.*\n?)$"
 
 t_CODEBLOCK_START = r"^`{3}(?P<lang>[^`\n]*)\n$"
@@ -119,7 +119,7 @@ def parse(t: str) -> list[ALLTYPE]:
                             _res.content.append(triggered)
                         logger.debug(f"unclosed, rolling back to ( {_ind} )")  # debug
                     else:
-                        _res.content.append(_content_res)
+                        _res.content.append(_content_res)  # type: ignore
                         logger.debug(
                             f"by closing this, we're here now! ( {_ind} )"
                         )  # debug
@@ -173,7 +173,9 @@ def parse(t: str) -> list[ALLTYPE]:
             logger.debug("LISTSTART " + line[:-1])
             mem = [
                 c_LISTITEM(
-                    lv=len(list_match.group("lv")), content=list_match.group("content")
+                    lv=len(list_match.group("lv")),
+                    content=list_match.group("content"),
+                    sortof=list_match.group("sortof"),
                 )
             ]
             while ind < len(p):
@@ -187,14 +189,15 @@ def parse(t: str) -> list[ALLTYPE]:
                         )
                         mem.append(
                             c_LISTITEM(
-                                lv=len(flm.group("lv")), content=flm.group("content")
+                                lv=len(flm.group("lv")),
+                                content=flm.group("content"),
+                                sortof=flm.group("sortof"),
                             )
                         )
                     else:
                         logger.debug("CONTINUED LISTITEM " + line[:-1])
                         mem[-1].content += line
                 elif line == "\n":
-                    ind += 1
                     break
                 ind += 1
             res.append(c_LIST(content=mem))
@@ -218,7 +221,6 @@ def parse(t: str) -> list[ALLTYPE]:
                         logger.debug("CONTINUED BQUOTEITEM " + line[:-1])
                         mem[-1].content += line
                 elif line == "\n":
-                    ind += 1
                     break
                 ind += 1
             res.append(c_BLOCKQUOTE(content=mem))
@@ -289,4 +291,7 @@ or you want some [masked link](https://psw.kr)??
 """.strip(
         "\n"
     )
-    pprint(parse(test_string), compact=False, indent=2)
+    parsed = parse(t=test_string)
+    pprint(object=parsed, compact=False, indent=2)
+    print("---------------")
+    print("".join(map(lambda x: x.md(), parsed)))
