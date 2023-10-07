@@ -60,7 +60,9 @@ PARAGRAPH_EFFECT_PARSER_RETURN = TypeVar(
 )
 
 
-def parse(t: str) -> list[ALLTYPE]:
+def parse(t: str, debug: bool = False) -> list[ALLTYPE]:
+    if debug:
+        logger.setLevel(DEBUG)
     ind = 0
     p = t.splitlines(keepends=True)
     res: list[ALLTYPE] = []
