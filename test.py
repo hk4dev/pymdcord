@@ -36,3 +36,13 @@ case(
 >>>asdf
 """
 )
+
+case(
+    """\
+asdfasdfasdf ![This is image](https://iasdf.as/asdfasdfa) ..
+**[Link..](https://psw.kr)**
+
+
+![Full line image](https://iasdf.as/asdfasdf)
+"""
+)
