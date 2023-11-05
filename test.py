@@ -8,6 +8,7 @@ def case(t: str):
     print("---------------")
     print("".join(map(lambda x: x.md(), parsed)))
     pprint(list(map(lambda x: x.md(), parsed)))
+    print("\n\n\n")
 
 
 case(
@@ -25,4 +26,13 @@ asdfasdfasdfasdfasdf asdfasdf...
 > asdf
  
 > asdf"""
+)
+
+case(
+    """\
+>asdf
+
+>>>asdf
+>>>asdf
+"""
 )
