@@ -28,7 +28,7 @@ t_CODEBLOCK_START = r"^`{3}(?P<lang>[^`\n]*)\n$"
 t_CODEBLOCK_END = r"^\s*`{3}\n?$"
 
 i_LINK = r"\[(?P<content>[^\n\]]*)\]\((?P<href>https?:\/\/[^\s\n\(\)]*)\)|(?P<barehref>https?:\/\/[^\s\n\(\)]*)"
-i_MASKIMAGE = r"^\[(?P<content>.*)\]\(!(?P<href>https?:\/\/[^\s\n\(\)]*)\)\n?$"
+i_MASKIMAGE = r"^!\[(?P<content>.*)\]\((?P<href>https?:\/\/[^\s\n\(\)]*)\)\n?$"
 
 HEADER = re.compile(t_HEADER)
 LIST = re.compile(t_LIST)
@@ -248,49 +248,3 @@ def parse(t: str, debug: bool = False) -> list[ALLTYPE]:
             res.append(_res)
     return res
 
-
-if __name__ == "__main__":
-    import sys
-    from pprint import pprint
-
-    sys.setrecursionlimit(50)
-
-    logger.setLevel(DEBUG)
-
-    test_string = """
-# HEADER
-# HEADER
-### HEADER
-### HEADER
-#WRONG HEADER
-##WRONG HEADER
-
-* LIST
-* LIST
-*WRONGLIST
-
->BLOCKQUOTE
-> BLOCKQUOTE
-CONTINUED YAY
->> NEXT LEVEL
-
-paragraph ||**effect** is|| __*here__!
-`hello ~~world~~ lol..
-
-```py
-asdf
-asdfasdf
-```
-
-here:https://psw.kr is my link!
-or you want some [masked link](https://psw.kr)??
-
-[this is image..](!https://test.image)
-""".strip(
-        "\n"
-    )
-    parsed = parse(t=test_string)
-    pprint(object=parsed, compact=False, indent=2)
-    print("---------------")
-    print("".join(map(lambda x: x.md(), parsed)))
-    pprint(list(map(lambda x: x.md(), parsed)))
